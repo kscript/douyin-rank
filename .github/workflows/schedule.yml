@@ -1,0 +1,48 @@
+name: Schedule
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "50 * * * *"
+
+jobs:
+  Release:
+    runs-on: windows-latest
+    steps:
+      - name: Install Node.js, NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Check out branch
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "github"
+          git config --local core.autocrlf false
+
+      - name: Cache Node.js modules
+        id: cache-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build Data
+        run: |
+          npm run start
+
+      - name: Push to GitHub
+        run: |
+          git add src
+          git commit -m "Update Data"
+          git push -u origin master
