@@ -1,5 +1,8 @@
 name: Schedule
 on:
+  repository_dispatch:
+    types:
+      - webhook
   workflow_dispatch:
   schedule:
     - cron: "50 * * * *"
