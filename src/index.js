@@ -15,7 +15,7 @@ const main = async () => {
   return list.filter(item => {
     const { url, page, hour } = item
     const realUrl = typeof url === 'function' ? url(page) : url
-    Object.assign({}, item, { url: realUrl })
+    Object.assign(item, { url: realUrl, now })
     return Array.isArray(hour) ? hour.includes(+dayjs.tz(now).format('HH')) : true
   }).map(async (item) => {
     const { type, page } = item
