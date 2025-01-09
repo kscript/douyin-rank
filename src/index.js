@@ -3,8 +3,15 @@ const { getData } = require('./fetch')
 const { saveData } = require('./save')
 const { dayjs } = require('./day')
 
+const formatUrl = (item) => {
+  const { url, page } = item
+  typeof url === 'function' && Object.assign(item, {
+    url: url(page)
+  })
+  return item
+}
 const save = async (options) => {
-  const { url } = options
+  const { url } = formatUrl(options)
   const data = await getData(url)
   if (data instanceof Object) {
     await saveData(options, data)
@@ -14,9 +21,8 @@ const save = async (options) => {
 const main = async () => {
   const now = new Date()
   return list.filter(item => {
-    const { url, page, hour } = item
-    const realUrl = typeof url === 'function' ? url(page) : url
-    Object.assign(item, { url: realUrl, now })
+    const { hour } = item
+    Object.assign(item, { now })
     return Array.isArray(hour) ? hour.includes(+dayjs.tz(now).format('HH')) : true
   }).map(async (item) => {
     const { type, page } = item
@@ -24,13 +30,15 @@ const main = async () => {
       const { total, limit, start, verify } = page
       const timeout = page.timeout > 1e3 ? page.timeout : 1e3
       if (total === undefined) {
-        const queue = async (offset = 0) => {
+        const queue = async (offset = 0, pageno = 0) => {
           if (typeof verify === 'function') {
-            const data = await save(Object.assign({}, item, { offset }))
+            const more = { offset, pageno }
+            Object.assign(page, more)
+            const data = await save(Object.assign({}, item, more))
             if (verify(data)) {
-              return new Promise((resolve, reject) => {
+              return new Promise((resolve) => {
                 setTimeout(() => {
-                  resolve(queue(offset + limit))
+                  resolve(queue(data.offset || (offset + limit), pageno + 1))
                 }, timeout)
               })
             }
