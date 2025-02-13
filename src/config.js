@@ -22,6 +22,10 @@ const list = [
     url: `https://live.douyin.com/webcast/ranklist/hour_detail/?aid=${AID}&anchor_id=${ANCHOR_ID}&room_id=${ROOM_ID}&ranklist_type=6`
   },
   {
+    type: 'creator-top',
+    url: `https://creator.douyin.com/janus/douyin/creator/data/billboard/list?aid=2906&page_num=1&page_size=200&type=10`
+  },
+  {
     dir: 'sitemap',
     type: 'sitemap',
     page: {
