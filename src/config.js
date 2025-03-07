@@ -24,18 +24,6 @@ const list = [
   {
     type: 'creator-top',
     url: `https://creator.douyin.com/janus/douyin/creator/data/billboard/list?aid=2906&page_num=1&page_size=200&type=10`
-  },
-  {
-    dir: 'sitemap',
-    type: 'sitemap',
-    page: {
-      start: 0,
-      offset: 0,
-      limit: 2e2,
-      total: 1e4
-    },
-    hour: [12],
-    url: ({ offset, limit}) => offset > 9800 ? '' : `https://www.douyin.com/aweme/v1/web/seo/html/sitemap/v2/?aid=6383&entity_type=3&entity_sub_type=6&count=${limit}&offset=${~~(offset / 200) * 200 }`
   }
 ]
 
