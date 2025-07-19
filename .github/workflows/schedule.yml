@@ -41,6 +41,9 @@ jobs:
         run: npm ci
 
       - name: Build Data
+        env:
+          ANCHOR_ID: ${{ secrets.ANCHOR_ID }}
+          ROOM_ID: ${{ secrets.ROOM_ID }}
         run: |
           npm run start
 
