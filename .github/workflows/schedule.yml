@@ -44,6 +44,8 @@ jobs:
         env:
           ANCHOR_ID: ${{ secrets.ANCHOR_ID }}
           ROOM_ID: ${{ secrets.ROOM_ID }}
+          MS_TOKEN: ${{ secrets.MS_TOKEN }}
+          A_BOGUS: ${{ secrets.A_BOGUS }}
         run: |
           npm run start
 
